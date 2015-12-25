@@ -32,7 +32,7 @@ THE SOFTWARE.
 #include <cmath>
 
 #include <tuple>
-#include <boost/array.hpp>
+//#include <boost/array.hpp>
 #include <boost/range/adaptor/transformed.hpp>
 #include <boost/range/irange.hpp>
 #include <boost/bind.hpp>
@@ -183,18 +183,18 @@ int main() {
 		gp << gp.binFile1d(std::make_tuple(x_pts, y_pts, z_pts), "record") << "with lines title 'boost::tuple of vector'";
 	}
 
-	gp << ", ";
-	shift += 1.0/num_examples;
+	//gp << ", ";
+	//shift += 1.0/num_examples;
 
-	{
-		std::vector<boost::array<double, 3> > pts(num_steps);
-		for(int i=0; i<num_steps; i++) {
-			pts[i][0] = get_x(i, shift);
-			pts[i][1] = get_y(i, shift);
-			pts[i][2] = get_z(i, shift);
-		}
-		gp << gp.binFile1d(pts, "record") << "with lines title 'vector of boost::array'";
-	}
+	//{
+	//	std::vector<boost::array<double, 3> > pts(num_steps);
+	//	for(int i=0; i<num_steps; i++) {
+	//		pts[i][0] = get_x(i, shift);
+	//		pts[i][1] = get_y(i, shift);
+	//		pts[i][2] = get_z(i, shift);
+	//	}
+	//	gp << gp.binFile1d(pts, "record") << "with lines title 'vector of boost::array'";
+	//}
 
 	gp << ", ";
 	shift += 1.0/num_examples;

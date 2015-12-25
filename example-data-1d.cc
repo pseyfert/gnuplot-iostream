@@ -31,7 +31,7 @@ THE SOFTWARE.
 #include <complex>
 #include <cmath>
 
-#include <boost/tuple/tuple.hpp>
+#include <tuple>
 #include <boost/array.hpp>
 #include <boost/range/adaptor/transformed.hpp>
 #include <boost/range/irange.hpp>
@@ -163,9 +163,9 @@ int main() {
 	shift += 1.0/num_examples;
 
 	{
-		std::vector<boost::tuple<double, double, double> > pts;
+		std::vector<std::tuple<double, double, double> > pts;
 		for(int i=0; i<num_steps; i++) {
-			pts.push_back(boost::make_tuple(get_x(i, shift), get_y(i, shift), get_z(i, shift)));
+			pts.push_back(std::make_tuple(get_x(i, shift), get_y(i, shift), get_z(i, shift)));
 		}
 		gp << gp.binFile1d(pts, "record") << "with lines title 'vector of boost::tuple'";
 	}
@@ -180,7 +180,7 @@ int main() {
 			y_pts.push_back(get_y(i, shift));
 			z_pts.push_back(get_z(i, shift));
 		}
-		gp << gp.binFile1d(boost::make_tuple(x_pts, y_pts, z_pts), "record") << "with lines title 'boost::tuple of vector'";
+		gp << gp.binFile1d(std::make_tuple(x_pts, y_pts, z_pts), "record") << "with lines title 'boost::tuple of vector'";
 	}
 
 	gp << ", ";
@@ -283,7 +283,7 @@ int main() {
 			y_pts[i] = get_y(i, shift);
 			z_pts[i] = get_z(i, shift);
 		}
-		gp << gp.binFile1d(boost::make_tuple(x_pts, y_pts, z_pts), "record") <<
+		gp << gp.binFile1d(std::make_tuple(x_pts, y_pts, z_pts), "record") <<
 			"with lines title 'boost::tuple of double[N]'";
 	}
 
@@ -326,7 +326,7 @@ int main() {
 			y_pts(i) = get_y(i, shift);
 			z_pts(i) = get_z(i, shift);
 		}
-		gp << gp.binFile1d(boost::make_tuple(x_pts, y_pts, z_pts), "record")
+		gp << gp.binFile1d(std::make_tuple(x_pts, y_pts, z_pts), "record")
 			<< "with lines title 'boost tuple of arma Row,Col,Col'";
 	}
 
@@ -334,9 +334,9 @@ int main() {
 	shift += 1.0/num_examples;
 
 	{
-		arma::field<boost::tuple<double,double,double> > pts(num_steps);
+		arma::field<std::tuple<double,double,double> > pts(num_steps);
 		for(int i=0; i<num_steps; i++) {
-			pts(i) = boost::make_tuple(
+			pts(i) = std::make_tuple(
 				get_x(i, shift),
 				get_y(i, shift),
 				get_z(i, shift)
@@ -392,8 +392,8 @@ int main() {
 	shift += 1.0/num_examples;
 
 	{
-		std::function<boost::tuple<double,double,double>(int)> f = [&shift](int i) {
-			return boost::make_tuple(get_x(i, shift), get_y(i, shift), get_z(i, shift)); };
+		std::function<std::tuple<double,double,double>(int)> f = [&shift](int i) {
+			return std::make_tuple(get_x(i, shift), get_y(i, shift), get_z(i, shift)); };
 
 		auto pts = boost::irange(0, num_steps) | boost::adaptors::transformed(f);
 
@@ -406,7 +406,7 @@ int main() {
 	{
 		auto steps = boost::irange(0, num_steps);
 
-		gp << gp.binFile1d(boost::make_tuple(
+		gp << gp.binFile1d(std::make_tuple(
 				steps | boost::adaptors::transformed(boost::bind(get_x, _1, shift)),
 				steps | boost::adaptors::transformed(boost::bind(get_y, _1, shift)),
 				steps | boost::adaptors::transformed(boost::bind(get_z, _1, shift))

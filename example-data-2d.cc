@@ -29,7 +29,7 @@ THE SOFTWARE.
 #include <complex>
 #include <cmath>
 
-#include <boost/tuple/tuple.hpp>
+#include <tuple>
 #include <boost/array.hpp>
 #include <boost/range/adaptor/transformed.hpp>
 #include <boost/range/irange.hpp>
@@ -152,11 +152,11 @@ int main() {
 	shift += num_v_each-1;
 
 	{
-		std::vector<std::vector<boost::tuple<double,double,double> > > pts(num_u);
+		std::vector<std::vector<std::tuple<double,double,double> > > pts(num_u);
 		for(int u=0; u<num_u; u++) {
 			pts[u].resize(num_v_each);
 			for(int v=0; v<num_v_each; v++) {
-				pts[u][v] = boost::make_tuple(
+				pts[u][v] = std::make_tuple(
 					get_point(u, v+shift).x,
 					get_point(u, v+shift).y,
 					get_point(u, v+shift).z
@@ -183,7 +183,7 @@ int main() {
 				z_pts[u][v] = get_point(u, v+shift).z;
 			}
 		}
-		gp << gp.binFile2d(boost::make_tuple(x_pts, y_pts, z_pts), "record") <<
+		gp << gp.binFile2d(std::make_tuple(x_pts, y_pts, z_pts), "record") <<
 			"with lines title 'boost::tuple of vec of vec'";
 	}
 
@@ -191,7 +191,7 @@ int main() {
 	shift += num_v_each-1;
 
 	{
-		std::vector<boost::tuple<
+		std::vector<std::tuple<
 				std::vector<double>,
 				std::vector<double>,
 				std::vector<double>
@@ -205,7 +205,7 @@ int main() {
 				y_pts[v] = get_point(u, v+shift).y;
 				z_pts[v] = get_point(u, v+shift).z;
 			}
-			pts.push_back(boost::make_tuple(x_pts, y_pts, z_pts));
+			pts.push_back(std::make_tuple(x_pts, y_pts, z_pts));
 		}
 		gp << gp.binFile2d(pts, "record") <<
 			"with lines title 'vec of boost::tuple of vec'";

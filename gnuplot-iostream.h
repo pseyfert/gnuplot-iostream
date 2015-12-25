@@ -71,16 +71,11 @@ THE SOFTWARE.
 #include <complex>
 #include <cstdlib>
 #include <cmath>
-
-#if GNUPLOT_ENABLE_CXX11
-#	include <tuple>
-#endif
+#include <tuple>
 
 #include <boost/iostreams/device/file_descriptor.hpp>
 #include <boost/iostreams/stream.hpp>
 #include <boost/version.hpp>
-#include <boost/utility.hpp>
-#include <boost/tuple/tuple.hpp>
 #include <boost/mpl/bool.hpp>
 // This is the version of boost which has v3 of the filesystem libraries by default.
 #if BOOST_VERSION >= 104600
@@ -88,8 +83,6 @@ THE SOFTWARE.
 #	include <boost/filesystem.hpp>
 #endif // BOOST_VERSION
 
-// This is used because VS2008 doesn't have stdint.h.
-#include <boost/cstdint.hpp>
 
 // Note: this is here for reverse compatibility.  The new way to enable blitz support is to
 // just include the gnuplot-iostream.h header after you include the blitz header (likewise for
@@ -194,30 +187,30 @@ struct is_like_stl_container {
 	static const bool value = type::value;
 };
 
-template <typename T>
-struct is_boost_tuple_nulltype {
-	static const bool value = false;
-	typedef boost::mpl::bool_<value> type;
-};
-
-template <>
-struct is_boost_tuple_nulltype<boost::tuples::null_type> {
-	static const bool value = true;
-	typedef boost::mpl::bool_<value> type;
-};
-
-BOOST_MPL_HAS_XXX_TRAIT_DEF(head_type)
-BOOST_MPL_HAS_XXX_TRAIT_DEF(tail_type)
-
-template <typename T>
-struct is_boost_tuple {
-	typedef boost::mpl::and_<
-			typename has_head_type<T>::type,
-			typename has_tail_type<T>::type
-		> type;
-	static const bool value = type::value;
-};
-
+//template <typename T>
+//struct is_boost_tuple_nulltype {
+//	static const bool value = false;
+//	typedef boost::mpl::bool_<value> type;
+//};
+//
+//template <>
+//struct is_boost_tuple_nulltype<boost::tuples::null_type> {
+//	static const bool value = true;
+//	typedef boost::mpl::bool_<value> type;
+//};
+//
+//BOOST_MPL_HAS_XXX_TRAIT_DEF(head_type)
+//BOOST_MPL_HAS_XXX_TRAIT_DEF(tail_type)
+//
+//template <typename T>
+//struct is_boost_tuple {
+//	typedef boost::mpl::and_<
+//			typename has_head_type<T>::type,
+//			typename has_tail_type<T>::type
+//		> type;
+//	static const bool value = type::value;
+//};
+//
 // More fine-grained, but doesn't compile!
 //template <typename T>
 //struct is_boost_tuple {
@@ -467,27 +460,27 @@ struct BinfmtSender {
 // Types from boost/cstdint.hpp are used because VS2008 doesn't have stdint.h.
 template<> struct BinfmtSender< float> { static void send(std::ostream &stream) { stream << "%float";  } };
 template<> struct BinfmtSender<double> { static void send(std::ostream &stream) { stream << "%double"; } };
-template<> struct BinfmtSender<boost::  int8_t> { static void send(std::ostream &stream) { stream << "%int8";   } };
-template<> struct BinfmtSender<boost:: uint8_t> { static void send(std::ostream &stream) { stream << "%uint8";  } };
-template<> struct BinfmtSender<boost:: int16_t> { static void send(std::ostream &stream) { stream << "%int16";  } };
-template<> struct BinfmtSender<boost::uint16_t> { static void send(std::ostream &stream) { stream << "%uint16"; } };
-template<> struct BinfmtSender<boost:: int32_t> { static void send(std::ostream &stream) { stream << "%int32";  } };
-template<> struct BinfmtSender<boost::uint32_t> { static void send(std::ostream &stream) { stream << "%uint32"; } };
-template<> struct BinfmtSender<boost:: int64_t> { static void send(std::ostream &stream) { stream << "%int64";  } };
-template<> struct BinfmtSender<boost::uint64_t> { static void send(std::ostream &stream) { stream << "%uint64"; } };
+template<> struct BinfmtSender<  int8_t> { static void send(std::ostream &stream) { stream << "%int8";   } };
+template<> struct BinfmtSender< uint8_t> { static void send(std::ostream &stream) { stream << "%uint8";  } };
+template<> struct BinfmtSender< int16_t> { static void send(std::ostream &stream) { stream << "%int16";  } };
+template<> struct BinfmtSender<uint16_t> { static void send(std::ostream &stream) { stream << "%uint16"; } };
+template<> struct BinfmtSender< int32_t> { static void send(std::ostream &stream) { stream << "%int32";  } };
+template<> struct BinfmtSender<uint32_t> { static void send(std::ostream &stream) { stream << "%uint32"; } };
+template<> struct BinfmtSender< int64_t> { static void send(std::ostream &stream) { stream << "%int64";  } };
+template<> struct BinfmtSender<uint64_t> { static void send(std::ostream &stream) { stream << "%uint64"; } };
 
 // BinarySender implementations for basic data types supported by gnuplot.  These types can
 // just be sent as stored in memory, so all these senders inherit from FlatBinarySender.
 template<> struct BinarySender< float> : public FlatBinarySender< float> { };
 template<> struct BinarySender<double> : public FlatBinarySender<double> { };
-template<> struct BinarySender<boost::  int8_t> : public FlatBinarySender<boost::  int8_t> { };
-template<> struct BinarySender<boost:: uint8_t> : public FlatBinarySender<boost:: uint8_t> { };
-template<> struct BinarySender<boost:: int16_t> : public FlatBinarySender<boost:: int16_t> { };
-template<> struct BinarySender<boost::uint16_t> : public FlatBinarySender<boost::uint16_t> { };
-template<> struct BinarySender<boost:: int32_t> : public FlatBinarySender<boost:: int32_t> { };
-template<> struct BinarySender<boost::uint32_t> : public FlatBinarySender<boost::uint32_t> { };
-template<> struct BinarySender<boost:: int64_t> : public FlatBinarySender<boost:: int64_t> { };
-template<> struct BinarySender<boost::uint64_t> : public FlatBinarySender<boost::uint64_t> { };
+template<> struct BinarySender<  int8_t> : public FlatBinarySender<  int8_t> { };
+template<> struct BinarySender< uint8_t> : public FlatBinarySender< uint8_t> { };
+template<> struct BinarySender< int16_t> : public FlatBinarySender< int16_t> { };
+template<> struct BinarySender<uint16_t> : public FlatBinarySender<uint16_t> { };
+template<> struct BinarySender< int32_t> : public FlatBinarySender< int32_t> { };
+template<> struct BinarySender<uint32_t> : public FlatBinarySender<uint32_t> { };
+template<> struct BinarySender< int64_t> : public FlatBinarySender< int64_t> { };
+template<> struct BinarySender<uint64_t> : public FlatBinarySender<uint64_t> { };
 
 // Make char types print as integers, not as characters.
 template <typename T>
@@ -572,7 +565,7 @@ struct BinarySender<std::complex<T> > {
 // }}}2
 
 // {{{2 boost::tuple support
-
+/*
 template <typename T>
 struct TextSender<T,
 	typename boost::enable_if<
@@ -661,7 +654,7 @@ struct BinarySender<T,
 		BinarySender<typename T::head_type>::send(stream, v.get_head());
 	}
 };
-
+*/
 // }}}2
 
 // {{{2 std::tuple support
@@ -989,7 +982,7 @@ public:
 // }}}2
 
 // {{{2 boost::tuple support
-
+/*
 template <typename T>
 class ArrayTraits<T,
 	typename boost::enable_if<
@@ -1038,7 +1031,7 @@ public:
 		return parent::get_range(arg.get_head());
 	}
 };
-
+*/
 // }}}2
 
 // {{{2 std::tuple support
@@ -1181,7 +1174,6 @@ class plotting_empty_container : public std::length_error {
 public:
 	plotting_empty_container() : std::length_error("plotting empty container") { }
 };
-
 // {{{2 Tags (like enums for metaprogramming)
 
 // These tags define what our goal is, what sort of thing should ultimately be sent to the
@@ -1655,7 +1647,7 @@ private:
 
 	std::string make_tmpfile() {
 #ifdef GNUPLOT_USE_TMPFILE
-		boost::shared_ptr<GnuplotTmpfile> tmp_file(new GnuplotTmpfile());
+		std::shared_ptr<GnuplotTmpfile> tmp_file(new GnuplotTmpfile());
 		// The file will be removed once the pointer is removed from the
 		// tmp_files container.
 		tmp_files.push_back(tmp_file);
@@ -1692,13 +1684,13 @@ public:
 		assert((arr_or_rec == "array") || (arr_or_rec == "record"));
 		std::string ret;
 		try {
-			std::ostringstream tmp;
-			tmp << " format='";
-			top_level_array_sender(tmp, arg, OrganizationMode(), ModeBinfmt());
-			tmp << "' " << arr_or_rec << "=(";
-			top_level_array_sender(tmp, arg, OrganizationMode(), ModeSize());
-			tmp << ")";
-			tmp << " ";
+		std::ostringstream tmp;
+		tmp << " format='";
+		top_level_array_sender(tmp, arg, OrganizationMode(), ModeBinfmt());
+		tmp << "' " << arr_or_rec << "=(";
+		top_level_array_sender(tmp, arg, OrganizationMode(), ModeSize());
+		tmp << ")";
+		tmp << " ";
 			ret = tmp.str();
 		} catch(const plotting_empty_container &) {
 			ret = std::string(" format='' ") + arr_or_rec + "=(0) ";
@@ -1838,7 +1830,7 @@ private:
 private:
 	GnuplotFeedback *feedback;
 #ifdef GNUPLOT_USE_TMPFILE
-	std::vector<boost::shared_ptr<GnuplotTmpfile> > tmp_files;
+	std::vector<std::shared_ptr<GnuplotTmpfile> > tmp_files;
 #else
 	// just a placeholder
 	std::vector<int> tmp_files;

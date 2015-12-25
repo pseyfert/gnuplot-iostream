@@ -26,8 +26,7 @@ THE SOFTWARE.
 #include <limits>
 #include <cmath>
 #include <cstdio>
-#include <boost/tuple/tuple.hpp>
-#include <boost/foreach.hpp>
+#include <tuple>
 
 // Warn about use of deprecated functions.
 #define GNUPLOT_DEPRECATE_WARN
@@ -184,10 +183,10 @@ void demo_png() {
 void demo_vectors() {
 	Gnuplot gp;
 
-	std::vector<boost::tuple<double, double, double, double> > vecs;
+	std::vector<std::tuple<double, double, double, double> > vecs;
 	for(double alpha=0; alpha<1; alpha+=1.0/24.0) {
 		double theta = alpha*2.0*3.14159;
-		vecs.push_back(boost::make_tuple(
+		vecs.push_back(std::make_tuple(
 			 cos(theta),      sin(theta),
 			-cos(theta)*0.1, -sin(theta)*0.1
 		));
@@ -200,11 +199,11 @@ void demo_vectors() {
 	pause_if_needed();
 }
 
-std::vector<boost::tuple<double, double, double> > get_trefoil() {
-	std::vector<boost::tuple<double, double, double> > vecs;
+std::vector<std::tuple<double, double, double> > get_trefoil() {
+	std::vector<std::tuple<double, double, double> > vecs;
 	for(double alpha=0; alpha<1; alpha+=1.0/120.0) {
 		double theta = alpha*2.0*3.14159;
-		vecs.push_back(boost::make_tuple(
+		vecs.push_back(std::make_tuple(
 			(2+cos(3*theta))*cos(2*theta),
 			(2+cos(3*theta))*sin(2*theta),
 			sin(3*theta)
@@ -218,7 +217,7 @@ void demo_inline_text() {
 	// This file handle will be closed automatically when gp goes out of scope.
 	Gnuplot gp(std::fopen("inline_text.gnu", "w"));
 
-	std::vector<boost::tuple<double, double, double> > vecs = get_trefoil();
+	std::vector<std::tuple<double, double, double> > vecs = get_trefoil();
 
 	gp << "splot '-' with lines notitle\n";
 	gp.send1d(vecs);
@@ -231,7 +230,7 @@ void demo_inline_binary() {
 	// This file handle will be closed automatically when gp goes out of scope.
 	Gnuplot gp(std::fopen("inline_binary.gnu", "wb"));
 
-	std::vector<boost::tuple<double, double, double> > vecs = get_trefoil();
+	std::vector<std::tuple<double, double, double> > vecs = get_trefoil();
 
 	gp << "splot '-' binary" << gp.binFmt1d(vecs, "record") << "with lines notitle\n";
 	gp.sendBinary1d(vecs);
@@ -244,7 +243,7 @@ void demo_external_text() {
 	// This file handle will be closed automatically when gp goes out of scope.
 	Gnuplot gp(std::fopen("external_text.gnu", "w"));
 
-	std::vector<boost::tuple<double, double, double> > vecs = get_trefoil();
+	std::vector<std::tuple<double, double, double> > vecs = get_trefoil();
 
 	std::cout << "Creating external_text.dat" << std::endl;
 	gp << "splot" << gp.file1d(vecs, "external_text.dat") << "with lines notitle\n";
@@ -257,7 +256,7 @@ void demo_external_binary() {
 	// This file handle will be closed automatically when gp goes out of scope.
 	Gnuplot gp(std::fopen("external_binary.gnu", "w"));
 
-	std::vector<boost::tuple<double, double, double> > vecs = get_trefoil();
+	std::vector<std::tuple<double, double, double> > vecs = get_trefoil();
 
 	std::cout << "Creating external_binary.dat" << std::endl;
 	gp << "splot" << gp.binFile1d(vecs, "record", "external_binary.dat")
@@ -421,7 +420,7 @@ int main(int argc, char **argv) {
 		printf("Usage: %s <demo_name>\n", argv[0]);
 		printf("Choose one of the following demos:\n");
 		typedef std::pair<std::string, void (*)(void)> demo_pair;
-		BOOST_FOREACH(const demo_pair &pair, demos) {
+    for(const demo_pair &pair: demos) {
 			printf("    %s\n", pair.first.c_str());
 		}
 		return 0;

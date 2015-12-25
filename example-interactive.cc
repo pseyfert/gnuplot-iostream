@@ -24,7 +24,7 @@ THE SOFTWARE.
 #include <cmath>
 #include <cstdlib>
 
-#include <boost/tuple/tuple.hpp>
+#include <tuple>
 
 // This must be defined before the first time that "gnuplot-iostream.h" is included.
 #define GNUPLOT_ENABLE_PTY
@@ -34,11 +34,11 @@ int main() {
 	Gnuplot gp;
 
 	// Create field of arrows at random locations.
-	std::vector<boost::tuple<double,double,double,double> > arrows;
+	std::vector<std::tuple<double,double,double,double> > arrows;
 	for(size_t i=0; i<100; i++) {
 		double x = rand() / double(RAND_MAX);
 		double y = rand() / double(RAND_MAX);
-		arrows.push_back(boost::make_tuple(x, y, 0, 0));
+		arrows.push_back(std::make_tuple(x, y, 0, 0));
 	}
 
 	double mx=0.5, my=0.5;
@@ -46,11 +46,11 @@ int main() {
 	while(mb != 3 && mb >= 0) {
 		// Make the arrows point towards the mouse click.
 		for(size_t i=0; i<arrows.size(); i++) {
-			double x = arrows[i].get<0>();
-			double y = arrows[i].get<1>();
+			double x = std::get<0>(arrows[i]);
+			double y = std::get<1>(arrows[i]);
 			double dx = (mx-x) * 0.1;
 			double dy = (my-y) * 0.1;
-			arrows[i] = boost::make_tuple(x, y, dx, dy);
+			arrows[i] = std::make_tuple(x, y, dx, dy);
 		}
 
 		gp << "plot '-' with vectors notitle\n";
